@@ -313,6 +313,8 @@ class WhisperModel:
             - a generator over transcribed segments
             - an instance of TranscriptionInfo
         """
+        
+        print(f"WhisperModel.transcribe IN: {suppress_tokens}")
         sampling_rate = self.feature_extractor.sampling_rate
 
         if not isinstance(audio, np.ndarray):
@@ -473,6 +475,8 @@ class WhisperModel:
             hallucination_silence_threshold=hallucination_silence_threshold,
             hotwords=hotwords,
         )
+        
+        print(f"WhisperModel.transcribe PROCESS: {options.suppress_tokens}")
 
         segments = self.generate_segments(features, tokenizer, options, encoder_output)
 
@@ -1225,17 +1229,23 @@ def get_compression_ratio(text: str) -> float:
     return len(text_bytes) / len(zlib.compress(text_bytes))
 
 
+
+
 def get_suppressed_tokens(
     tokenizer: Tokenizer,
     suppress_tokens: Optional[List[int]],
 ) -> Optional[List[int]]:
-    if not suppress_tokens or -1 in suppress_tokens:
-        return suppress_tokens
 
     suppress_tokens = list(suppress_tokens)
 
-    # Ensure the following special tokens are suppressed when the user does
-    # not use the default set (-1).
+    if -1 in suppress_tokens:
+        suppress_tokens = [t for t in suppress_tokens if t >= 0]
+        suppress_tokens.extend(tokenizer.non_speech_tokens)
+    elif suppress_tokens is None or len(suppress_tokens) == 0:
+        suppress_tokens = []  # interpret empty string as an empty list
+    else:
+        assert isinstance(suppress_tokens, list), "suppress_tokens must be a list"
+
     suppress_tokens.extend(
         [
             tokenizer.transcribe,
@@ -1246,8 +1256,9 @@ def get_suppressed_tokens(
         ]
     )
 
-    return sorted(set(suppress_tokens))
-
+    x =  tuple(sorted(set(suppress_tokens)))
+    print(f"Suppress tokens: {suppress_tokens}")
+    return x
 
 def merge_punctuations(alignment: List[dict], prepended: str, appended: str) -> None:
     # merge prepended punctuations
