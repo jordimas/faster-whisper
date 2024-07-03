@@ -277,7 +277,7 @@ class WhisperModel:
           prefix: Optional text to provide as a prefix for the first window.
           suppress_blank: Suppress blank outputs at the beginning of the sampling.
           suppress_tokens: List of token IDs to suppress. -1 will suppress a default set
-            of symbols as defined in the model config.json file.
+            of symbols as defined in `tokenizer.non_speech_tokens()`
           without_timestamps: Only sample text tokens.
           max_initial_timestamp: The initial timestamp cannot be later than this.
           word_timestamps: Extract word-level timestamps using the cross-attention pattern
