@@ -312,7 +312,7 @@ class WhisperModel:
 
             - a generator over transcribed segments
             - an instance of TranscriptionInfo
-        """        
+        """
         sampling_rate = self.feature_extractor.sampling_rate
 
         if not isinstance(audio, np.ndarray):
