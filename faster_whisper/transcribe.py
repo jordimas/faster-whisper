@@ -314,7 +314,6 @@ class WhisperModel:
             - an instance of TranscriptionInfo
         """
         
-        print(f"WhisperModel.transcribe IN: {suppress_tokens}")
         sampling_rate = self.feature_extractor.sampling_rate
 
         if not isinstance(audio, np.ndarray):
@@ -475,8 +474,6 @@ class WhisperModel:
             hallucination_silence_threshold=hallucination_silence_threshold,
             hotwords=hotwords,
         )
-        
-        print(f"WhisperModel.transcribe PROCESS: {options.suppress_tokens}")
 
         segments = self.generate_segments(features, tokenizer, options, encoder_output)
 
@@ -1229,8 +1226,6 @@ def get_compression_ratio(text: str) -> float:
     return len(text_bytes) / len(zlib.compress(text_bytes))
 
 
-
-
 def get_suppressed_tokens(
     tokenizer: Tokenizer,
     suppress_tokens: Optional[List[int]],
@@ -1256,9 +1251,7 @@ def get_suppressed_tokens(
         ]
     )
 
-    x =  tuple(sorted(set(suppress_tokens)))
-    print(f"Suppress tokens: {suppress_tokens}")
-    return x
+    return tuple(sorted(set(suppress_tokens)))
 
 def merge_punctuations(alignment: List[dict], prepended: str, appended: str) -> None:
     # merge prepended punctuations
