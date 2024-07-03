@@ -1253,6 +1253,7 @@ def get_suppressed_tokens(
 
     return tuple(sorted(set(suppress_tokens)))
 
+
 def merge_punctuations(alignment: List[dict], prepended: str, appended: str) -> None:
     # merge prepended punctuations
     i = len(alignment) - 2
